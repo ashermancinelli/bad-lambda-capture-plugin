@@ -1,4 +1,3 @@
-
 struct CaptureTest {
 
   /* Should not capture */
@@ -14,14 +13,14 @@ struct CaptureTest {
    * variable `i`. This is problematic when using portability libraries, as
    * member variables may not reside on the host. */
   void methodUsingBadCapturePointer() {
-    (void)[=] () {
+    auto throwaway = [=] () {
       *i = 1;
     };
   }
 
   /* Raw arrays should not be used either. */
   void methodUsingBadCaptureArray() {
-    (void)[=] () {
+    auto throwaway = [=] () {
       j[0] = 1;
     };
   }
@@ -31,7 +30,7 @@ struct CaptureTest {
    */
   void methodUsingGoodCapture() {
     int* localCopy = i;
-    (void)[=] () {
+    auto throwaway = [=] () {
       *localCopy += 1;
     };
   }
@@ -39,7 +38,7 @@ struct CaptureTest {
   /* Methods which capture `this` variables which are not pointers should not
    * cause an issue. */
   void methodNotCapturingPointer() {
-    (void)[=] () {
+    auto throwaway = [=] () {
       k++;
     };
   }

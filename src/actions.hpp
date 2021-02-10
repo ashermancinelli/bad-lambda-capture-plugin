@@ -11,19 +11,6 @@
 
 using namespace clang;
 
-    /*
-        VarDecl* Decl = it->getCapturedVar();
-        QualType Type = Decl->getType();
-
-        if (Type->isPointerType()) {
-          FullSourceLoc FullLocation = Context->getFullLoc(Expr->getBeginLoc());
-          if (FullLocation.isValid())
-            llvm::outs() << "Found lambda capturing pointer-like member variable "
-              << "via `this` pointer at line="
-              << FullLocation.getSpellingLineNumber() << " column="
-              << FullLocation.getSpellingColumnNumber() << "\n";
-        }
-        */
 struct FindLambdaCapturedFields
   : public RecursiveASTVisitor<FindLambdaCapturedFields> {
 public:
@@ -36,20 +23,6 @@ public:
     /* Problematic use of member variable! Time to generate diagnostic
      * information */
     if (MemberType->isArrayType() || MemberType->isPointerType()) {
-
-      /*
-      ValueDecl* VD = Expr->getMemberDecl();
-      std::string MemberTypeString;
-      llvm::raw_string_ostream OS(MemberTypeString);
-      Expr->getType()->dump(OS, *Context);
-      */
-
-      /* Gather source location information */
-      /*
-      FullSourceLoc UseLocation = Context->getFullLoc(Expr->getBeginLoc());
-      FullSourceLoc DefineLocation = Context->getFullLoc(VD->getBeginLoc());
-      FullSourceLoc LambdaLocation = Context->getFullLoc(Parent->getBeginLoc());
-      */
 
       /* Report diagnostic information */
       clang::DiagnosticsEngine &DE = Context->getDiagnostics();

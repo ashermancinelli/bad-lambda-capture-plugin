@@ -14,3 +14,6 @@ foreach(target ${PROJECT_NAME} ${PROJECT_NAME}-standalone)
     clangTooling
     )
 endforeach()
+
+install(TARGETS ${PROJECT_NAME} DESTINATION lib)
+install(TARGETS ${PROJECT_NAME}-standalone DESTINATION bin)
