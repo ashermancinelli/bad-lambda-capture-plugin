@@ -36,26 +36,40 @@ public:
     /* Problematic use of member variable! Time to generate diagnostic
      * information */
     if (MemberType->isArrayType() || MemberType->isPointerType()) {
-      std::stringstream ss;
-      ss << "Found lambda capturing pointer-like member variable.\n";
 
+      /*
       ValueDecl* VD = Expr->getMemberDecl();
       std::string MemberTypeString;
       llvm::raw_string_ostream OS(MemberTypeString);
       Expr->getType()->dump(OS, *Context);
+      */
 
       /* Gather source location information */
+      /*
       FullSourceLoc UseLocation = Context->getFullLoc(Expr->getBeginLoc());
       FullSourceLoc DefineLocation = Context->getFullLoc(VD->getBeginLoc());
       FullSourceLoc LambdaLocation = Context->getFullLoc(Parent->getBeginLoc());
+      */
 
       /* Report diagnostic information */
       clang::DiagnosticsEngine &DE = Context->getDiagnostics();
-      const auto Suggestion = clang::FixItHint::CreateInsertion(
-          Parent->getBeginLoc(), MemberTypeString + "local_copy_" + Expr->getMemberNameInfo().getAsString());
-      const auto ID = DE.getCustomDiagID(clang::DiagnosticsEngine::Error,
-          "Consider creating a local copy of the member variable just outside the lambda capture.");
-      DE.Report(Parent->getBeginLoc(), ID).AddFixItHint(Suggestion);
+
+      /* Error message describing the issue */
+      auto ID = DE.getCustomDiagID(
+          clang::DiagnosticsEngine::Error,
+          "Found lambda capturing pointer-like member variable here.\n");
+      DE.Report(Expr->getBeginLoc(), ID);
+
+      /* Remark indicating which member variable triggered the error */
+      ID = DE.getCustomDiagID(clang::DiagnosticsEngine::Note,
+          "Member variable declared here:");
+      DE.Report(Expr->getMemberDecl()->getBeginLoc(), ID);
+
+      /* Remark with suggested change to mitigate the issue */
+      ID = DE.getCustomDiagID(clang::DiagnosticsEngine::Remark,
+          "Consider creating a local copy of the member variable in local scope"
+          "\njust outside the lambda capture.");
+      DE.Report(Parent->getBeginLoc(), ID);
     }
     return true;
   }
