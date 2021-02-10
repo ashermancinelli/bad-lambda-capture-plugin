@@ -71,10 +71,10 @@ just outside the lambda capture.
 2 errors generated.
 ```
 
-To run an example using the stadalone plugin driver:
+To run an example using the standalone plugin driver:
 
 ```console
-$ $PROJ_DIR/build/src/lambda-capture-checker-standalone -f $PROJ_DIR/test/capture.cpp
+$ $PROJ_DIR/build/src/lambda-capture-checker-standalone $PROJ_DIR/test/capture.cpp
 
 /Users/manc568/workspace/clang-plugin/test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
 
