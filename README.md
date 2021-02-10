@@ -73,7 +73,7 @@ just outside the lambda capture.
 2 errors generated.
 ```
 
-To run an example using the stadalone plugin driver:
+To run an example using the standalone plugin driver:
 
 ```console
 $ $PROJ_DIR/build/src/LambdaCheckerStandalone -f $PROJ_DIR/test/capture.cpp
