@@ -17,6 +17,10 @@ $ cmake .. && make
 
 The rest of the documentation will assume this repository has been cloned to `$PROJ_DIR`.
 
+*NOTE:* You may find warnings such as `ld: warning: direct access in function 'DeduceTemplateArgumentsByTypeMatch...`.
+This is due to rtti being disables on OSX. Clang plugins assume you'll have clang on your path or you'll invoke the plugin with clang.
+These warnings may be ignored.
+
 ## Usage
 
 To run an example using the plugin library:
