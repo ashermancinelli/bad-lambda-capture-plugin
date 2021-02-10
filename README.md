@@ -23,6 +23,23 @@ These warnings may be ignored.
 
 ## Usage
 
+If you are familiar with clang plugins, this section may not be of much use to you.
+
+### For a Project
+
+The standalone driver may be run on a compile commands database.
+If you are using a CMake-based project, simply add the following line to your top-level CMakeLists.txt file:
+
+```cmake
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+```
+
+Or pass `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` to CMake invokation.
+
+This will generate a file `compile_commands.json` in your top-level CMake build directory. 
+
+### From Command Line
+
 To run an example using the plugin library:
 
 ```console
