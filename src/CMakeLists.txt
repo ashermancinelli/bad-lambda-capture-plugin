@@ -1,7 +1,8 @@
-add_executable(${PROJECT_NAME}-standalone driver.cpp)
+
+add_executable(${PROJECT_NAME}Standalone driver.cpp)
 add_library(${PROJECT_NAME} SHARED plugin.cpp)
 
-foreach(target ${PROJECT_NAME} ${PROJECT_NAME}-standalone)
+foreach(target ${PROJECT_NAME} ${PROJECT_NAME}Standalone)
   target_link_libraries(${target}
     PRIVATE
     clangAST
@@ -15,5 +16,19 @@ foreach(target ${PROJECT_NAME} ${PROJECT_NAME}-standalone)
     )
 endforeach()
 
-install(TARGETS ${PROJECT_NAME} DESTINATION lib)
-install(TARGETS ${PROJECT_NAME}-standalone DESTINATION bin)
+install(
+  TARGETS ${PROJECT_NAME} 
+  DESTINATION lib
+  EXPORT LambdaChecker
+  )
+install(
+  TARGETS ${PROJECT_NAME}Standalone 
+  DESTINATION bin
+  EXPORT LambdaChecker
+  )
+
+install(EXPORT LambdaChecker
+  FILE LambdaChecker.cmake
+  NAMESPACE LambdaChecker::
+  DESTINATION lib/cmake/LambdaChecker
+  )

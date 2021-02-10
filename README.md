@@ -9,11 +9,13 @@ Standard CMake workflow, and you must be using Clang of course:
 
 ```console
 $ git clone https://github.com/ashermancinelli/lambda-capture-checker.git
-$ cd bad-lambda-capture-plugin
+$ cd lambda-capture-checker
 $ export PROJ_DIR=$PWD
 $ mkdir build && cd build
 $ cmake .. && make
 ```
+
+This project also exports CMake targets, so if you add install prefix to the cmake search path, you can simply import the target from your project.
 
 The rest of the documentation will assume this repository has been cloned to `$PROJ_DIR`.
 
@@ -44,7 +46,7 @@ To run an example using the plugin library:
 
 ```console
 $ # Set PROJ_DIR to top-level directory of this repository
-$ clang++ -Xclang -load -Xclang $PROJ_DIR/build/src/liblambda-capture-checker.dylib -Xclang -plugin -Xclang lambda-capture-checker ../test/capture.cpp
+$ clang++ -Xclang -load -Xclang $PROJ_DIR/build/src/libLambdaChecker.dylib -Xclang -plugin -Xclang LambdaChecker ../test/capture.cpp
 
 ../test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
 
@@ -74,7 +76,7 @@ just outside the lambda capture.
 To run an example using the stadalone plugin driver:
 
 ```console
-$ $PROJ_DIR/build/src/lambda-capture-checker-standalone -f $PROJ_DIR/test/capture.cpp
+$ $PROJ_DIR/build/src/LambdaCheckerStandalone -f $PROJ_DIR/test/capture.cpp
 
 /Users/manc568/workspace/clang-plugin/test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
 
