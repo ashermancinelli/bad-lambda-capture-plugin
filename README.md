@@ -30,6 +30,7 @@ If you are familiar with clang plugins, this section may not be of much use to y
 ### For a Project
 
 The standalone driver may be run on a compile commands database.
+See references [3] and [4] for more information.
 If you are using a CMake-based project, simply add the following line to your top-level CMakeLists.txt file:
 
 ```cmake
@@ -76,7 +77,7 @@ just outside the lambda capture.
 To run an example using the standalone plugin driver:
 
 ```console
-$ $PROJ_DIR/build/src/LambdaCheckerStandalone -f $PROJ_DIR/test/capture.cpp
+$ $PROJ_DIR/build/src/LambdaCheckerStandalone $PROJ_DIR/test/capture.cpp
 
 /Users/manc568/workspace/clang-plugin/test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
 
@@ -89,6 +90,9 @@ $ $PROJ_DIR/build/src/LambdaCheckerStandalone -f $PROJ_DIR/test/capture.cpp
 just outside the lambda capture.
     auto throwaway = [=] () {
 ```
+
+To use this directly, your source must be isolated (eg no includes or linking steps) or you must use json compile commands database.
+It is reccommended to use the latter.
 
 ## Motivation
 
@@ -115,5 +119,7 @@ private:
 
 1. [RAJA](https://github.com/LLNL/RAJA/blob/main/docs/sphinx/user_guide/index.rst)
 1. [Kokkos](https://github.com/kokkos/kokkos)
+1. [Clang compile commands database spec](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
+1. [Clang compile commands tutorial](https://clang.llvm.org/docs/HowToSetupToolingForLLVM.html)
 1. [Clang AST Visitor documentation](https://clang.llvm.org/docs/RAVFrontendAction.html)
 1. [Peter Goldsborough's C++Now talk on Clang/LLVM tools](https://www.youtube.com/watch?v=E6i8jmiy8MY&ab_channel=CppNow)
