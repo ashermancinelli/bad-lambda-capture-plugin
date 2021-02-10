@@ -5,6 +5,18 @@ This repo provides a standalone executable and a clang plugin to verify that no 
 
 ## Building
 
+Standard CMake workflow, and you must be using Clang of course:
+
+```console
+$ git clone https://github.com/ashermancinelli/bad-lambda-capture-plugin.git
+$ cd bad-lambda-capture-plugin
+$ export PROJ_DIR=$PWD
+$ mkdir build && cd build
+$ cmake .. && make
+```
+
+The rest of the documentation will assume this repository has been cloned to `$PROJ_DIR`.
+
 ## Usage
 
 To run an example using the plugin library:
