@@ -115,3 +115,5 @@ private:
 
 1. [RAJA](https://github.com/LLNL/RAJA/blob/main/docs/sphinx/user_guide/index.rst)
 1. [Kokkos](https://github.com/kokkos/kokkos)
+1. [Clang AST Visitor documentation](https://clang.llvm.org/docs/RAVFrontendAction.html)
+1. [Peter Goldsborough's C++Now talk on Clang/LLVM tools](https://www.youtube.com/watch?v=E6i8jmiy8MY&ab_channel=CppNow)
