@@ -8,6 +8,7 @@
 
 using namespace llvm;
 using namespace clang;
+using namespace clang::tooling;
 
 class LambdaCaptureCheckerAction : public clang::ASTFrontendAction {
 public:
@@ -22,10 +23,10 @@ static cl::OptionCategory LambdaCaptureCheckerCategory(
     PROJECT_NAME " options");
 
 int main(int argc, const char **argv) {
-  clang::tooling::CommonOptionsParser OptionsParser(argc, argv,
-      LambdaCaptureCheckerCategory);
-  clang::tooling::ClangTool Tool(OptionsParser.getCompilations(),
-      OptionsParser.getSourcePathList());
-  return Tool.run(
-      clang::tooling::newFrontendActionFactory<LambdaCaptureCheckerAction>().get());
+  CommonOptionsParser Op(argc, argv, LambdaCaptureCheckerCategory);
+
+  // create a new Clang Tool instance (a LibTooling environment)
+  ClangTool Tool(Op.getCompilations(), Op.getSourcePathList());
+
+  return Tool.run(newFrontendActionFactory<LambdaCaptureCheckerAction>().get());
 }
