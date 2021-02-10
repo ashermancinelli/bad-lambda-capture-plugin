@@ -27,3 +27,6 @@ if(APPLE)
 endif()
 
 add_subdirectory(src)
+
+# This file is valid C++ but will trigger error with the plugin
+add_executable(dummy test/capture.cpp)

@@ -43,19 +43,32 @@ This will generate a file `compile_commands.json` in your top-level CMake build 
 To run an example using the plugin library:
 
 ```console
-$ clang++ -Xclang -load -Xclang $PROJ_DIR/build/src/liblambda-capture-checker.dylib -Xclang -plugin -Xclang lambda-capture-checker $PROJ_DIR/test/capture.cpp
+$ # Set PROJ_DIR to top-level directory of this repository
+$ clang++ -Xclang -load -Xclang $PROJ_DIR/build/src/liblambda-capture-checker.dylib -Xclang -plugin -Xclang lambda-capture-checker ../test/capture.cpp
 
-/Users/manc568/workspace/clang-plugin/test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
+../test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
 
       *i = 1;
        ^
-/Users/manc568/workspace/clang-plugin/test/capture.cpp:4:3: note: Member variable declared here:
+../test/capture.cpp:4:3: note: Member variable declared here:
   int *i;
   ^
-/Users/manc568/workspace/clang-plugin/test/capture.cpp:16:22: remark: Consider creating a local copy of the member variable in local scope
+../test/capture.cpp:16:22: remark: Consider creating a local copy of the member variable in local scope
 just outside the lambda capture.
     auto throwaway = [=] () {
                      ^
+../test/capture.cpp:24:7: error: Found lambda capturing pointer-like member variable here.
+
+      j[0] = 1;
+      ^
+../test/capture.cpp:7:3: note: Member variable declared here:
+  int j[1];
+  ^
+../test/capture.cpp:23:22: remark: Consider creating a local copy of the member variable in local scope
+just outside the lambda capture.
+    auto throwaway = [=] () {
+                     ^
+2 errors generated.
 ```
 
 To run an example using the stadalone plugin driver:
