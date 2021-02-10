@@ -1,4 +1,4 @@
-# Lambda Checker
+# Lambda Capture Checker
 
 When using portability libraries such as RAJA[1] and Kokkos[2], the capture clauses of lambda statements are extremely important.
 This repo provides a standalone executable and a clang plugin to verify that no array- or pointer-like member variables are captured in a lambda capture clause defined in an instance method.
