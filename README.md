@@ -8,7 +8,7 @@ This repo provides a standalone executable and a clang plugin to verify that no 
 Standard CMake workflow, and you must be using Clang of course:
 
 ```console
-$ git clone https://github.com/ashermancinelli/bad-lambda-capture-plugin.git
+$ git clone https://github.com/ashermancinelli/lambda-capture-checker.git
 $ cd bad-lambda-capture-plugin
 $ export PROJ_DIR=$PWD
 $ mkdir build && cd build
@@ -22,7 +22,7 @@ The rest of the documentation will assume this repository has been cloned to `$P
 To run an example using the plugin library:
 
 ```console
-$ clang++ -Xclang -load -Xclang $PROJ_DIR/build/src/libfind-bad-lambda-captures.dylib -Xclang -plugin -Xclang find-bad-lambda-captures $PROJ_DIR/test/capture.cpp
+$ clang++ -Xclang -load -Xclang $PROJ_DIR/build/src/liblambda-capture-checker.dylib -Xclang -plugin -Xclang lambda-capture-checker $PROJ_DIR/test/capture.cpp
 
 /Users/manc568/workspace/clang-plugin/test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
 
@@ -40,7 +40,7 @@ just outside the lambda capture.
 To run an example using the stadalone plugin driver:
 
 ```console
-$ $PROJ_DIR/build/src/find-bad-lambda-captures-standalone -f $PROJ_DIR/test/capture.cpp
+$ $PROJ_DIR/build/src/lambda-capture-checker-standalone -f $PROJ_DIR/test/capture.cpp
 
 /Users/manc568/workspace/clang-plugin/test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
 
