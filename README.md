@@ -1,0 +1,81 @@
+# Lambda Checker
+
+When using portability libraries such as RAJA[1] and Kokkos[2], the capture clauses of lambda statements are extremely important.
+This repo provides a standalone executable and a clang plugin to verify that no array- or pointer-like member variables are captured in a lambda capture clause defined in an instance method.
+
+## Building
+
+Standard CMake workflow, and you must be using Clang of course:
+
+```console
+$ git clone https://github.com/ashermancinelli/bad-lambda-capture-plugin.git
+$ cd bad-lambda-capture-plugin
+$ export PROJ_DIR=$PWD
+$ mkdir build && cd build
+$ cmake .. && make
+```
+
+The rest of the documentation will assume this repository has been cloned to `$PROJ_DIR`.
+
+## Usage
+
+To run an example using the plugin library:
+
+```console
+$ clang++ -Xclang -load -Xclang $PROJ_DIR/build/src/libfind-bad-lambda-captures.dylib -Xclang -plugin -Xclang find-bad-lambda-captures $PROJ_DIR/test/capture.cpp
+
+/Users/manc568/workspace/clang-plugin/test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
+
+      *i = 1;
+       ^
+/Users/manc568/workspace/clang-plugin/test/capture.cpp:4:3: note: Member variable declared here:
+  int *i;
+  ^
+/Users/manc568/workspace/clang-plugin/test/capture.cpp:16:22: remark: Consider creating a local copy of the member variable in local scope
+just outside the lambda capture.
+    auto throwaway = [=] () {
+                     ^
+```
+
+To run an example using the stadalone plugin driver:
+
+```console
+$ $PROJ_DIR/build/src/find-bad-lambda-captures-standalone -f $PROJ_DIR/test/capture.cpp
+
+/Users/manc568/workspace/clang-plugin/test/capture.cpp:17:8: error: Found lambda capturing pointer-like member variable here.
+
+      *i = 1;
+       ^
+/Users/manc568/workspace/clang-plugin/test/capture.cpp:4:3: note: Member variable declared here:
+  int *i;
+  ^
+/Users/manc568/workspace/clang-plugin/test/capture.cpp:16:22: remark: Consider creating a local copy of the member variable in local scope
+just outside the lambda capture.
+    auto throwaway = [=] () {
+```
+
+## Motivation
+
+For example, the loop in the following method `times_constant` may cause confusing and indeterminate errors when used with RAJA, especially when the data does not reside on the host:
+
+```cpp
+struct Vector {
+  Vector(std::size_t sz, int* data/*=pointer to data on device*/)
+    : sz(sz), data(data) {}
+  void times_constant(int factor) {
+    RAJA::forall<RAJA::cuda_exec<128>>(RAJA::RangeSegment(0, sz),
+      [=] (RAJA::Index_type i) {
+        /* Here, `data` is captured implicitly via `this` pointer */
+        data[i] *= factor;
+      });
+  }
+private:
+  std::size_t sz;
+  int* data;
+};
+```
+
+## References
+
+1. [RAJA](https://github.com/LLNL/RAJA/blob/main/docs/sphinx/user_guide/index.rst)
+1. [Kokkos](https://github.com/kokkos/kokkos)
