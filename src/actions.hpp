@@ -87,11 +87,11 @@ private:
   FindLambdaCapturedFields MemberVisitor;
 };
 
-class FindBadLambdaCapturesConsumer : public clang::ASTConsumer {
+class LambdaCaptureCheckerConsumer : public clang::ASTConsumer {
 public:
-  explicit FindBadLambdaCapturesConsumer(ASTContext *Context)
+  explicit LambdaCaptureCheckerConsumer(ASTContext *Context)
     : Visitor(Context) {}
-  explicit FindBadLambdaCapturesConsumer(CompilerInstance& CI)
+  explicit LambdaCaptureCheckerConsumer(CompilerInstance& CI)
     : Visitor(&CI.getASTContext()) {}
 
   virtual void HandleTranslationUnit(clang::ASTContext &Context) {
