@@ -16,13 +16,17 @@ if __name__ == '__main__':
     database = args.compile_commands if not args.compile_commands is None \
             else './compile_commands.json'
 
-    invoke = lambda x: f'{x} -Xclang -load -Xclang {args.tool_path}' \
-            f' -Xclang -plugin -Xclang {args.plugin} -fsyntax-only'
+    invoke = lambda x: f'{x} -Xclang -load -Xclang' \
+            f' {os.path.abspath(args.tool_path)}' \
+            f' -Xclang -plugin -Xclang {args.plugin}' \
+            ' -fsyntax-only'
 
     database = json.load(open(database, 'r'))
     
-    dict_keys(['directory', 'command', 'file'])
     for translation_unit in database:
-        print(f'Running tool on {translation_unit.file}')
-        os.system(f'cd {translation_unit.directory} &&'
-                f' {invoke(translation_unit.command)}')
+        d = os.path.abspath(translation_unit['directory'])
+        f = os.path.abspath(translation_unit['file'])
+        c = os.path.abspath(translation_unit['command'])
+        # print(d, f, c, '\nINVOK:', invoke(c)); exit()
+        print(f'Running tool on {f}')
+        os.system(f'cd {d} && {invoke(c)}')
