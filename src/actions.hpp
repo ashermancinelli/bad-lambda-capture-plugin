@@ -70,7 +70,7 @@ public:
     if (!FoundThis)
       return true;
 
-    const CompoundStmt* LambdaBody = Expr->getCompoundStmtBody();
+    const CompoundStmt* LambdaBody = Expr->getBody();
     if (LambdaBody->body_empty())
       return true;
 
