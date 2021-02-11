@@ -171,6 +171,8 @@ private:
 };
 ```
 
+See `./test/capture.cpp` for problematic and non-problematic examples.
+
 ## References
 
 1. [RAJA](https://github.com/LLNL/RAJA/blob/main/docs/sphinx/user_guide/index.rst)
