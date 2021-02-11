@@ -2,7 +2,24 @@
 import argparse, os, sys, json
 
 parser = argparse.ArgumentParser(
-        description='Check all files in compilation database with clang tool.')
+        description='Check all files in compilation database with clang tool.',
+        usage=f'''{sys.argv[0]} [options]
+
+{'-' * 80}
+Long Description:
+
+    This tool reads each entry from a `compile_commands.json` database, and runs
+    each command after appending the following flags:
+        -Xclang -load
+        -Xclang /path/to/tool
+        -Xclang -plugin
+        -Xclang <name of plugin>
+
+    The tool will log each source file the tool runs on.
+
+{'-' * 80}
+
+''', formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('-c', '--compile-commands', required=False, type=str,
         help='Path to compilation database')
 parser.add_argument('-t', '--tool-path', required=True, type=str,
