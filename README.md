@@ -39,7 +39,63 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 Or pass `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` to CMake invokation.
 
-This will generate a file `compile_commands.json` in your top-level CMake build directory. 
+This will generate a file `compile_commands.json` in your top-level CMake build directory.
+
+### Using the python script
+
+This is the method we use.
+The script `check-all.py` in the top level directory loads a `compile_commands.json` database and appends the needed flags to the clang invokation.
+
+```console
+$ ./check-all.py --help
+usage: ./check-all.py [options]
+
+--------------------------------------------------------------------------------
+
+Long Description:
+
+    This tool reads each entry from a `compile_commands.json` database, and runs
+    each command after appending the following flags:
+        -Xclang -load
+        -Xclang PLUGIN_LIBRARY
+        -Xclang -plugin
+        -Xclang PLUGIN_NAME
+
+    The tool will log each source file the tool runs on.
+
+--------------------------------------------------------------------------------
+
+Check all files in compilation database with clang tool.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p COMPILE_COMMANDS, --compile-commands COMPILE_COMMANDS
+                        Path to compilation database
+  -l PLUGIN_LIBRARY, --plugin-library PLUGIN_LIBRARY
+                        Path to clang plugin library
+  -n PLUGIN_NAME, --plugin-name PLUGIN_NAME
+                        Name of clang plugin
+```
+
+For example, to run this on HiOp's[5] codebase, we build with clang and export compile commands:
+
+```
+$ cd $HIOP_DIR/build
+$ CC=clang CXX=clang++ cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+$ make
+```
+
+And then run the python script on each source file:
+
+```
+$ # CD into directory containing this tool
+$ ./check-all.py -p $HIOP_DIR/build/compile_commands.json -l ./build/src/libLambdaChecker.dylib -n LambdaChecker
+Running tool on /Users/manc568/workspace/hiop/src/Interface/chiopInterface.cpp
+Running tool on /Users/manc568/workspace/hiop/src/Optimization/hiopNlpFormulation.cpp
+Running tool on /Users/manc568/workspace/hiop/src/Optimization/hiopFactAcceptor.cpp
+Running tool on /Users/manc568/workspace/hiop/src/Optimization/hiopIterate.cpp
+...
+```
 
 ### From Command Line
 
@@ -121,5 +177,6 @@ private:
 1. [Kokkos](https://github.com/kokkos/kokkos)
 1. [Clang compile commands database spec](https://clang.llvm.org/docs/JSONCompilationDatabase.html)
 1. [Clang compile commands tutorial](https://clang.llvm.org/docs/HowToSetupToolingForLLVM.html)
+1. [HiOp](https://github.com/LLNL/hiop)
 1. [Clang AST Visitor documentation](https://clang.llvm.org/docs/RAVFrontendAction.html)
 1. [Peter Goldsborough's C++Now talk on Clang/LLVM tools](https://www.youtube.com/watch?v=E6i8jmiy8MY&ab_channel=CppNow)
