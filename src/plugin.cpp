@@ -2,6 +2,14 @@
 #include "clang/Frontend/FrontendPluginRegistry.h"
 #include <config.hpp>
 
+/*******************************************************************************
+ * @file plugin.cpp
+ * @brief outward-facing component of the library plugin.
+ *
+ * This source contains the component of the plugin specific to the dynamic
+ * library version of the plugin.
+ ******************************************************************************/
+
 struct LambdaCheckerCapturesAction : public clang::PluginASTAction {
   std::unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance& CI,
       llvm::StringRef file) override {

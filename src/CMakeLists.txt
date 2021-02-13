@@ -1,3 +1,9 @@
+#[[#############################################################################
+
+LambdaChecker target definitions and linked libraries. CMake targets are
+exported to ${CMAKE_INSTALL_PREFIX}/lib/cmake/LambdaChecker.
+
+]]##############################################################################
 
 add_executable(${PROJECT_NAME}Standalone driver.cpp)
 add_library(${PROJECT_NAME} SHARED plugin.cpp)

@@ -11,6 +11,31 @@
 
 using namespace clang;
 
+/*******************************************************************************
+ * @file actions.hpp
+ * @brief Core of the plugin.
+ *
+ * This header includes the essential logic for the plugin, and the `driver.cpp`
+ * and `plugin.cpp` specialize this plugin for either standalone driver or
+ * a dynamic clang plugin library.
+ *
+ * @remark LLVM is extremely unstable, so to have some form of portability I've
+ * opted for some rather ugly macros. This is what I get for using llvm instead
+ * of the more stable libclang.
+ ******************************************************************************/
+
+/* See file clang/include/clang/AST/ExprCXX.h for most updated method to get
+ * lambda body. */
+#if __clang_major__ == 10
+#define LAMBDACHECKER_GET_STMT_BODY(E) E->getBody()
+#elif __clang_major__ == 11
+#define LAMBDACHECKER_GET_STMT_BODY(E) E->getCompoundStmtBody()
+#elif __clang_major__ == 12
+#define LAMBDACHECKER_GET_STMT_BODY(E) E->getBody()
+#else
+#error "Unsupported clang version! Use clang 10-12."
+#endif
+
 struct FindLambdaCapturedFields
   : public RecursiveASTVisitor<FindLambdaCapturedFields> {
 public:
@@ -21,7 +46,7 @@ public:
     auto MemberType = Expr->getType();
 
     /* Problematic use of member variable! Time to generate diagnostic
-     * information */
+     * information. */
     if (MemberType->isArrayType() || MemberType->isPointerType()) {
 
       /* Report diagnostic information */
@@ -70,7 +95,7 @@ public:
     if (!FoundThis)
       return true;
 
-    const CompoundStmt* LambdaBody = Expr->getCompoundStmtBody();
+    const CompoundStmt* LambdaBody = LAMBDACHECKER_GET_STMT_BODY(Expr);
     if (LambdaBody->body_empty())
       return true;
 
