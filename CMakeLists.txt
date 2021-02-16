@@ -40,11 +40,16 @@ include_directories(${CLANG_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 add_definitions(${CLANG_DEFINITIONS})
 
-if(APPLE)
+if(NOT LLVM_ENABLE_RTTI)
   add_definitions(-fno-rtti)
 endif()
 
 add_subdirectory(src)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC 
+  "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
+target_link_libraries(${PROJECT_NAME}Standalone PUBLIC 
+  "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
 
 #[[ This file is valid C++ but will trigger error with the plugin. Used as an
     example for users to test the plugin. ]]
