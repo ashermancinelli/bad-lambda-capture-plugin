@@ -7,7 +7,7 @@ exported to ${CMAKE_INSTALL_PREFIX}/lib/cmake/SyntaxChecker.
 
 set(shared_sources recorddecl_visitor.cpp field_visitor.cpp)
 add_executable(SyntaxCheckerStandalone driver.cpp ${shared_sources})
-# add_library(SyntaxChecker SHARED plugin.cpp)
+add_library(SyntaxChecker SHARED plugin.cpp ${shared_sources})
 
 foreach(target SyntaxCheckerStandalone)
   target_link_libraries(${target}
@@ -23,11 +23,11 @@ foreach(target SyntaxCheckerStandalone)
     )
 endforeach()
 
-# install(
-#   TARGETS SyntaxChecker 
-#   DESTINATION lib
-#   EXPORT SyntaxChecker
-#   )
+install(
+  TARGETS SyntaxChecker 
+  DESTINATION lib
+  EXPORT SyntaxChecker
+  )
 install(
   TARGETS SyntaxCheckerStandalone 
   DESTINATION bin

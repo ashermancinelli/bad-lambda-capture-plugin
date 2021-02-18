@@ -48,8 +48,8 @@ add_subdirectory(src)
 foreach(target ${PROJECT_NAME} SyntaxChecker)
   target_link_libraries(${PROJECT_NAME} PUBLIC 
     "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
-  # target_link_libraries(${PROJECT_NAME}Standalone PUBLIC 
-  # "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
+  target_link_libraries(${PROJECT_NAME}Standalone PUBLIC 
+    "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
 endforeach()
 
 # This file is valid C++ but will trigger error with the lambda plugin. Used
