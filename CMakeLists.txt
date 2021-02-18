@@ -58,3 +58,4 @@ add_executable(capture-dummy test/capture.cpp)
 
 # Similar to above, but for various syntax issues
 add_executable(syntax-dummy test/syntax.cpp)
+add_executable(hiop-dummy test/hiop.cpp)
