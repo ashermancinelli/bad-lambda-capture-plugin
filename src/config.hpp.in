@@ -4,3 +4,18 @@
  ******************************************************************************/
 
 #cmakedefine PROJECT_NAME "@PROJECT_NAME@"
+#cmakedefine CHECKER_VERSION "@CHECKER_VERSION@"
+
+/* See file llvm-project/clang/include/clang/AST/ExprCXX.h for most updated
+ * method to get lambda body. */
+#if __clang_major__ == 10
+#define LAMBDACHECKER_GET_STMT_BODY(E) E->getBody()
+#elif __clang_major__ == 11
+#define LAMBDACHECKER_GET_STMT_BODY(E) E->getCompoundStmtBody()
+#elif __clang_major__ == 12
+#define LAMBDACHECKER_GET_STMT_BODY(E) E->getBody()
+#elif __clang_major__ == 13
+#define LAMBDACHECKER_GET_STMT_BODY(E) E->getCompoundStmtBody()
+#else
+#error "Unsupported clang version! Use clang 10-13."
+#endif

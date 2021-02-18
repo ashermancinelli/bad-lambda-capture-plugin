@@ -1,4 +1,5 @@
 #pragma once
+#include "config.hpp"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -23,18 +24,6 @@ using namespace clang;
  * opted for some rather ugly macros. This is what I get for using llvm instead
  * of the more stable libclang.
  ******************************************************************************/
-
-/* See file clang/include/clang/AST/ExprCXX.h for most updated method to get
- * lambda body. */
-#if __clang_major__ == 10
-#define LAMBDACHECKER_GET_STMT_BODY(E) E->getBody()
-#elif __clang_major__ == 11
-#define LAMBDACHECKER_GET_STMT_BODY(E) E->getCompoundStmtBody()
-#elif __clang_major__ == 12
-#define LAMBDACHECKER_GET_STMT_BODY(E) E->getBody()
-#else
-#error "Unsupported clang version! Use clang 10-12."
-#endif
 
 struct FindLambdaCapturedFields
   : public RecursiveASTVisitor<FindLambdaCapturedFields> {

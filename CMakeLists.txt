@@ -9,9 +9,6 @@ pointer.
 This plugin depends on LLVM and Clang version 10.0.1 through 12.0.0. This may
 work with other versions of Clang and LLVM, however this has not been tested.
 
-Project name is the single source-of-truth for naming of all components in this
-project.
-
 See README.md for more information.
 
 ]]##############################################################################
@@ -23,6 +20,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(LambdaChecker CXX)
+
+set(CHECKER_VERSION "0.0.1")
 
 find_package(Clang REQUIRED)
 
@@ -46,11 +45,16 @@ endif()
 
 add_subdirectory(src)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC 
-  "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
-target_link_libraries(${PROJECT_NAME}Standalone PUBLIC 
-  "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
+foreach(target ${PROJECT_NAME} SyntaxChecker)
+  target_link_libraries(${PROJECT_NAME} PUBLIC 
+    "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
+  # target_link_libraries(${PROJECT_NAME}Standalone PUBLIC 
+  # "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
+endforeach()
 
-#[[ This file is valid C++ but will trigger error with the plugin. Used as an
-    example for users to test the plugin. ]]
-add_executable(dummy test/capture.cpp)
+# This file is valid C++ but will trigger error with the lambda plugin. Used
+# as an example for users to test the plugin.
+add_executable(capture-dummy test/capture.cpp)
+
+# Similar to above, but for various syntax issues
+add_executable(syntax-dummy test/syntax.cpp)
