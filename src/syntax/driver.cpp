@@ -32,11 +32,23 @@ public:
 };
 
 static cl::OptionCategory SyntaxCheckerCategory("SyntaxChecker options");
+
 std::string StripPrefix="";
 static cl::opt<std::string, true> StripPrefixOption("strip",
-    cl::desc("Strip prefix from class/struct decls."
-      "stripping."), cl::location(StripPrefix),
-    cl::value_desc("prefix"), cl::cat(SyntaxCheckerCategory));
+    cl::desc("Strip prefix from class/struct decls."),
+    cl::location(StripPrefix), cl::value_desc("prefix"),
+    cl::cat(SyntaxCheckerCategory));
+
+bool DoCheckPascalCaseClassNames=true;
+static cl::opt<bool, true> CheckClassNamesOption("class-names",
+    cl::desc("Check for class names to be in pascal case."),
+    cl::location(DoCheckPascalCaseClassNames), cl::cat(SyntaxCheckerCategory));
+
+bool DoCheckFieldNames=true;
+static cl::opt<bool, true> CheckFieldNamesOption("field-names",
+    cl::desc("Check for field names to be in snake case with a trailing "
+      "underscore."), cl::location(DoCheckFieldNames),
+    cl::cat(SyntaxCheckerCategory));
 
 auto VersionPrinter = [] (llvm::raw_ostream& OS) {
   OS << R"(
@@ -61,6 +73,12 @@ int main(int argc, const char **argv) {
 
   /* Create a new Clang Tool instance (a LibTooling environment). */
   ClangTool Tool(Op.getCompilations(), Op.getSourcePathList());
+
+  if (StripPrefix != "" && !DoCheckPascalCaseClassNames) {
+    llvm::errs() << "Option --strip=<prefix> requires option --class-names to "
+      << "be enabled!\n";
+    return 1;
+  }
 
   return Tool.run(newFrontendActionFactory<SyntaxCheckerAction>().get());
 }

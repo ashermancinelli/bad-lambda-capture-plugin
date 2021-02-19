@@ -12,6 +12,10 @@
  *
  ******************************************************************************/
 
+/* The extern bools here are set in the driver that instantiates the consumer */
+extern bool DoCheckPascalCaseClassNames;
+extern bool DoCheckFieldNames;
+
 class SyntaxCheckerConsumer : public clang::ASTConsumer {
 public:
   explicit SyntaxCheckerConsumer(ASTContext *Context)
@@ -20,8 +24,10 @@ public:
     : ClassVisitor(&CI.getASTContext()), FieldVisitor(&CI.getASTContext()) {}
 
   virtual void HandleTranslationUnit(clang::ASTContext &Context) {
-    ClassVisitor.TraverseDecl(Context.getTranslationUnitDecl());
-    FieldVisitor.TraverseDecl(Context.getTranslationUnitDecl());
+    if (DoCheckPascalCaseClassNames)
+      ClassVisitor.TraverseDecl(Context.getTranslationUnitDecl());
+    if (DoCheckFieldNames)
+      FieldVisitor.TraverseDecl(Context.getTranslationUnitDecl());
   }
 private:
   CheckPascalCaseClassNames ClassVisitor;
