@@ -27,6 +27,16 @@ bool CheckPascalCaseClassNames::VisitCXXRecordDecl(CXXRecordDecl* RD) {
     if (ApplyStripPrefix)
       std::advance(it, StripPrefix.size());
 
+    /* If the prefix preceeded a non-alphabetical character, we need to
+     * skip until we find one. */
+    while (!std::isalpha(*it)) {
+      /* If we get to the end of the name after stripping the prefix and looking
+       * for the next alpha char, we're in big trouble. */
+      assert(it != end(name) && "Stripped prefix of name, but name had no"
+          " alphabetical characters after the prefix!");
+      it++;
+    }
+
     /* Always uppercase the first letter */
     ss << (char)std::toupper(*it++);
 

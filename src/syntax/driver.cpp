@@ -38,23 +38,25 @@ static cl::opt<std::string, true> StripPrefixOption("strip",
       "stripping."), cl::location(StripPrefix),
     cl::value_desc("prefix"), cl::cat(SyntaxCheckerCategory));
 
-int main(int argc, const char **argv) {
-
-  cl::SetVersionPrinter([] (llvm::raw_ostream& os) {
-        os << R"(
+auto VersionPrinter = [] (llvm::raw_ostream& OS) {
+  OS << R"(
 ===--------------------------------------------------------------------------===
 
    SyntaxChecker
 
    --------------------------------------------------------------------------   
 
-   [Version )" CHECKER_VERSION << "\n  compiled on " << __DATE__ << R"(]
+   [Version )" CHECKER_VERSION << " compiled on " << __DATE__ << R"(]
 
 ===--------------------------------------------------------------------------===
 
 )";
-      });
+};
 
+int main(int argc, const char **argv) {
+
+  std::vector<std::string> args(argv, argv+argc);
+  cl::SetVersionPrinter(VersionPrinter);
   CommonOptionsParser Op(argc, argv, SyntaxCheckerCategory);
 
   /* Create a new Clang Tool instance (a LibTooling environment). */
