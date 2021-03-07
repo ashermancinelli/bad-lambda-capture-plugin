@@ -3,6 +3,8 @@
 When using portability libraries such as RAJA[1] and Kokkos[2], the capture clauses of lambda statements are extremely important.
 This repo provides a standalone executable and a clang plugin to verify that no array- or pointer-like member variables are captured in a lambda capture clause defined in an instance method.
 
+See [the blog post linked here](https://ashermancinelli.github.io/clang-lambda) for an in-depth discussion on how we developed this tool.
+
 ## Building
 
 Standard CMake workflow, and you must be using Clang of course:
